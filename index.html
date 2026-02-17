@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blood Donor Finder - Save Lives Today</title>
+    <meta name="description"
+        content="Find blood donors and blood banks near you instantly. Join our community of life-savers.">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <!-- Floating Particles Background -->
+    <div class="particles-container" id="particles"></div>
+
+    <div class="container">
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <i class="fas fa-heart-pulse"></i>
+                    <span>Saving Lives Together</span>
+                </div>
+                <h1 class="hero-title">
+                    <span class="gradient-text">Find Blood Donors</span>
+                    <span class="hero-subtitle">When Every Second Counts</span>
+                </h1>
+                <p class="hero-description">
+                    Connect with verified blood donors and blood banks in your area instantly.
+                    Join thousands of life-savers making a difference every day.
+                </p>
+                <div class="hero-stats-mini">
+                    <div class="mini-stat">
+                        <i class="fas fa-users"></i>
+                        <div>
+                            <strong id="heroTotalDonors">0</strong>
+                            <span>Active Donors</span>
+                        </div>
+                    </div>
+                    <div class="mini-stat">
+                        <i class="fas fa-hospital"></i>
+                        <div>
+                            <strong id="heroTotalBanks">0</strong>
+                            <span>Blood Banks</span>
+                        </div>
+                    </div>
+                    <div class="mini-stat">
+                        <i class="fas fa-hand-holding-heart"></i>
+                        <div>
+                            <strong>24/7</strong>
+                            <span>Support</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero-actions">
+                    <button class="btn-hero-primary" onclick="document.getElementById('locationInput').focus()">
+                        <i class="fas fa-search"></i>
+                        Find Donors Now
+                    </button>
+                    <button class="btn-hero-secondary"
+                        onclick="document.getElementById('donorForm').scrollIntoView({behavior: 'smooth'})">
+                        <i class="fas fa-hand-holding-medical"></i>
+                        Become a Donor
+                    </button>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="blood-drop-animation">
+                    <i class="fas fa-droplet"></i>
+                </div>
+                <div class="pulse-circle pulse-1"></div>
+                <div class="pulse-circle pulse-2"></div>
+                <div class="pulse-circle pulse-3"></div>
+            </div>
+        </section>
+
+        <!-- Emergency Banner -->
+        <div class="emergency-banner">
+            <div class="emergency-icon">
+                <i class="fas fa-phone-volume"></i>
+            </div>
+            <div class="emergency-content">
+                <strong>Emergency?</strong>
+                <span>Call our 24/7 helpline: <a href="tel:+911234567890">+91 123-456-7890</a></span>
+            </div>
+            <div class="server-status" id="serverStatus">
+                <span class="status-dot" aria-hidden="true"></span>
+                <span class="status-text">Connecting...</span>
+            </div>
+        </div>
+
+        <!-- Search Section -->
+        <section class="search-section">
+            <div class="search-box">
+                <input type="text" id="locationInput" placeholder="Enter your city or location" class="input-field">
+                <select id="bloodTypeFilter" class="input-field">
+                    <option value="">All Blood Types</option>
+                    <option value="O+">O+</option>
+                    <option value="O-">O-</option>
+                    <option value="A+">A+</option>
+                    <option value="A-">A-</option>
+                    <option value="B+">B+</option>
+                    <option value="B-">B-</option>
+                    <option value="AB+">AB+</option>
+                    <option value="AB-">AB-</option>
+                </select>
+                <button id="searchBtn" class="btn-primary">
+                    <i class="fas fa-search"></i> Search
+                </button>
+                <div id="spinner" class="spinner" aria-hidden="true"></div>
+            </div>
+            <div class="search-meta">
+                <div class="filters">
+                    <small class="meta-text"><strong id="selectedLocation"></strong></small>
+                </div>
+                <div class="search-help">
+                    <small class="meta-text"></small>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats Section -->
+        <section class="stats-section">
+            <div class="stat-card">
+                <h3 id="totalDonors">0</h3>
+                <p>Total Donors</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="totalBanks">0</h3>
+                <p>Blood Banks</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="availableDonors">0</h3>
+                <p>Available Now</p>
+            </div>
+        </section>
+
+        <!-- Results Section -->
+        <section class="results-section">
+            <!-- <div id="fallbackBanner" class="fallback-banner" hidden></div> -->
+            <div class="results-header">
+                <h2>Results</h2>
+                <div class="results-controls">
+                    <button class="tab-btn active" data-tab="donors">
+                        <i class="fas fa-user-md"></i> Donors
+                    </button>
+                    <button class="tab-btn" data-tab="banks">
+                        <i class="fas fa-hospital"></i> Blood Banks
+                    </button>
+                </div>
+            </div>
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="donors">
+                    <i class="fas fa-user-md"></i> Donors
+                </button>
+                <button class="tab-btn" data-tab="banks">
+                    <i class="fas fa-hospital"></i> Blood Banks
+                </button>
+            </div>
+
+            <!-- Donors Tab -->
+            <div id="donors" class="tab-content active">
+                <div id="donorsList" class="list-container">
+                    <p class="no-data">Search to find donors</p>
+                </div>
+            </div>
+
+            <!-- Banks Tab -->
+            <div id="banks" class="tab-content">
+                <div id="banksList" class="list-container">
+                    <p class="no-data">Search to find blood banks</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Add Donor Form -->
+        <section class="add-section">
+            <h2>Become a Donor</h2>
+            <form id="donorForm" class="form">
+                <input type="text" id="donorName" placeholder="Full Name" required class="input-field">
+                <input type="email" id="donorEmail" placeholder="Email" required class="input-field">
+                <input type="tel" id="donorPhone" placeholder="Phone Number" required class="input-field">
+                <select id="donorBloodType" required class="input-field">
+                    <option value="">Select Blood Type</option>
+                    <option value="O+">O+</option>
+                    <option value="O-">O-</option>
+                    <option value="A+">A+</option>
+                    <option value="A-">A-</option>
+                    <option value="B+">B+</option>
+                    <option value="B-">B-</option>
+                    <option value="AB+">AB+</option>
+                    <option value="AB-">AB-</option>
+                </select>
+                <input type="text" id="donorCity" placeholder="City" required class="input-field">
+                <button type="submit" class="btn-primary">Register as Donor</button>
+            </form>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features-section">
+            <div class="section-header">
+                <h2 class="section-title">Why Choose Us</h2>
+                <p class="section-subtitle">Making blood donation simple, fast, and reliable</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3>Instant Search</h3>
+                    <p>Find verified donors and blood banks in seconds with our advanced search system</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-halved"></i>
+                    </div>
+                    <h3>Verified Donors</h3>
+                    <p>All donors are verified to ensure safety and reliability for recipients</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h3>24/7 Available</h3>
+                    <p>Access our platform anytime, anywhere. Emergency support always ready</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-map-location-dot"></i>
+                    </div>
+                    <h3>Location Based</h3>
+                    <p>Smart location matching to find the nearest donors and blood banks</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-mobile-screen"></i>
+                    </div>
+                    <h3>Mobile Friendly</h3>
+                    <p>Fully responsive design works perfectly on all devices</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-heart-circle-check"></i>
+                    </div>
+                    <h3>Free Service</h3>
+                    <p>Completely free platform dedicated to saving lives</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials Section -->
+        <section class="testimonials-section">
+            <div class="section-header">
+                <h2 class="section-title">Life-Saving Stories</h2>
+                <p class="section-subtitle">Real experiences from our community</p>
+            </div>
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">
+                        "Found a donor within minutes during an emergency. This platform literally saved my father's
+                        life. Forever grateful!"
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="author-info">
+                            <strong>Priya Sharma</strong>
+                            <span>Mumbai, Maharashtra</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">
+                        "As a regular donor, this platform makes it so easy to help people in need. The interface is
+                        simple and effective."
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="author-info">
+                            <strong>Rahul Verma</strong>
+                            <span>Delhi, NCR</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="testimonial-text">
+                        "Excellent service! Connected with a blood bank immediately. The emergency helpline was very
+                        responsive and helpful."
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="author-info">
+                            <strong>Anjali Patel</strong>
+                            <span>Bangalore, Karnataka</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2025 Blood Donor Finder. Save Lives, Donate Blood. </p>
+        </footer>
+    </div>
+
+    <script src="animations.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
